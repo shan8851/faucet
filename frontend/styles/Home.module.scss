@@ -1,0 +1,32 @@
+@import "./colors";
+@import "./variables";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: $tablet;
+  max-width: $small;
+  margin: 0 auto;
+  text-align: center;
+
+  @media (max-width: $tablet) {
+    flex-direction: column;
+    justify-content: center;
+    min-width: unset;
+    max-width: unset;
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonLeft {
+  margin-right: $x1;
+}
+
+.buttonRight {
+  margin-left: $x1;
+}

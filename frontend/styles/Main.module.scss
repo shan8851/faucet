@@ -1,0 +1,28 @@
+@import "./colors";
+@import "./variables";
+
+.container {
+  padding: $space-mega;
+  display: flex;
+  flex-direction: column;
+  max-width: $tablet;
+  margin: 0 auto;
+  text-align: center;
+
+  @media (max-width: $tablet) {
+    padding: $space-normal;
+  }
+}
+
+.header {
+  font-size: 32px;
+  @media (max-width: $tablet) {
+    font-size: 26px;
+  }
+}
+
+.text {
+  @media (max-width: $tablet) {
+    font-size: 14px;
+  }
+}
