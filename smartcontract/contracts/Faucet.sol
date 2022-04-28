@@ -11,7 +11,7 @@ contract Faucet {
 
     struct Donator {
         uint256 amountRequested;
-        uint256 amountDeposited;
+        uint256 amountDonated;
         bool hasDonated;
         uint256 lastTimeSentAt;
     }
@@ -19,8 +19,10 @@ contract Faucet {
     //mapping user address to user(donator) struct
     mapping(address => Donator) public donators;
 
+    Donator[] donatorArray;
+
     //deopist event
-    event Deposited(
+    event Donated(
         address indexed userAddress,
         uint256 weiAmount,
         uint256 thisTotal,
@@ -50,8 +52,15 @@ contract Faucet {
          if (donators[msg.sender].hasDonated == false) {
             totalDonators = totalDonators + 1;
             donators[msg.sender].hasDonated = true;
+            donators[msg.sender].amountDonated =
+                donators[msg.sender].amountDonated +
+                msg.value;
+        } else {
+                        donators[msg.sender].amountDonated =
+                donators[msg.sender].amountDonated +
+                msg.value;
         }
-        emit Deposited(msg.sender, msg.value, address(this).balance, totalDonators);
+        emit Donated(msg.sender, msg.value, address(this).balance, totalDonators);
         totalFaucetFunds = address(this).balance;
     }
 
@@ -79,6 +88,10 @@ contract Faucet {
 
     function getTotalFaucetFunds() public view returns (uint256) {
         return totalFaucetFunds;
+    }
+
+    function getDonators() public view returns (Donator[] memory) {
+        return donatorArray;
     }
 
         function allowedToRequestPayout(address _address) public view returns (bool) {

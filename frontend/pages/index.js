@@ -213,7 +213,7 @@ export default function Home() {
     const profileImage = await fetch(
       `https://web3-images-api.kibalabs.com/v1/accounts/${id}/image`,
       {
-        mode: "cors",
+        mode: "np-cors",
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
