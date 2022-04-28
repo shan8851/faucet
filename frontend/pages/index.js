@@ -6,8 +6,10 @@ import { FAUCET_CONTRACT_ADDRESS, abi } from "../constants";
 import { Layout } from "../components/Layout";
 import { Main } from "../components/Main";
 import { Button } from "../components/Button";
+import { Spinner } from "../components/Spinner";
 import s from "../styles/Home.module.scss";
 import { Stats } from "../components/Stats";
+import { SpinnerLarge } from "../components/SpinnerLarge";
 
 export default function Home() {
   const [walletConnected, setWalletConnected] = useState(false);
@@ -18,22 +20,22 @@ export default function Home() {
   const [faucetBalance, setFaucetBalance] = useState(0);
   const [donators, setDonators] = useState(0);
   const [requests, setRequests] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const connectWallet = async () => {
+    setLoading(true);
     const provider = await web3Modal.connect();
     const web3Provider = new ethers.providers.Web3Provider(provider);
     const signer = web3Provider.getSigner();
     const address = await signer.getAddress();
     setAccount(address);
     setWalletConnected(true);
-    const balance = await signer.getBalance();
-    const balanceInEth = ethers.utils.formatEther(balance);
-    setUserBalance(balanceInEth);
-    getFaucetBalance();
     const network = await web3Provider.getNetwork();
     if (network.chainId !== 4) {
       setNetworkError(true);
     }
+    await fetchData();
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -62,8 +64,21 @@ export default function Home() {
     });
   }
 
+  const fetchUserBalance = async () => {
+    setLoading(true);
+    const provider = await web3Modal.connect();
+    const web3Provider = new ethers.providers.Web3Provider(provider);
+    const signer = web3Provider.getSigner();
+    const balance = await signer.getBalance();
+    const balanceInEth = ethers.utils.formatEther(balance);
+    setUserBalance(balanceInEth);
+    setLoading(false);
+  };
+
   const donate = async () => {
     try {
+      setErrorMessage("");
+      setLoading(true);
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const signer = web3Provider.getSigner();
@@ -75,17 +90,19 @@ export default function Home() {
       const tx = await faucetContract.deposit({
         value: ethers.utils.parseUnits("0.1", "ether"),
       });
-      setLoading(true);
-      // wait for the transaction to get mined
       await tx.wait();
+      await fetchData();
       setLoading(false);
     } catch (err) {
       console.error(err);
+      setLoading(false);
+      setErrorMessage("Something went wrong");
     }
   };
 
   const requestEth = async () => {
     try {
+      setErrorMessage("");
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const signer = web3Provider.getSigner();
@@ -94,12 +111,14 @@ export default function Home() {
         abi,
         signer
       );
-      const tx = await faucetContract.sendTokensToAddress(account);
+      const tx = await faucetContract.sendEth(account);
       setLoading(true);
       await tx.wait();
       setLoading(false);
     } catch (err) {
       console.error(err);
+      setLoading(false);
+      setErrorMessage("Something went wrong");
     }
   };
 
@@ -163,6 +182,13 @@ export default function Home() {
     }
   };
 
+  const fetchData = async () => {
+    await getFaucetBalance();
+    await getTotalDonators();
+    await getTotalPayouts();
+    await fetchUserBalance();
+  };
+
   // const withdraw = async () => {
   //   try {
   //     const provider = await web3Modal.connect();
@@ -173,7 +199,7 @@ export default function Home() {
   //       abi,
   //       signer
   //     );
-  //     const tx = await faucetContract.rescueETH();
+  //     const tx = await faucetContract.withdrawEth();
   //     setLoading(true);
   //     await tx.wait();
   //     setLoading(false);
@@ -182,7 +208,7 @@ export default function Home() {
   //   }
   // };
 
-  const requestDisabled = faucetBalance < ethers.utils.parseEther("0.05");
+  const requestDisabled = faucetBalance < 50000000000000000;
 
   return (
     <Layout
@@ -191,6 +217,7 @@ export default function Home() {
       connectWallet={connectWallet}
       account={account}
       userBalance={userBalance}
+      loading={loading}
     >
       <Head>
         <title>Faucet</title>
@@ -199,30 +226,42 @@ export default function Home() {
       </Head>
       <div>
         <Main />
-
-        <div className={s.container}>
-          <div className={s.buttonContainer}>
-            <div className={s.buttonLeft}>
-              <Button buttonText="Donate 0.1 ETH " handleClick={donate} />
-            </div>
-            <div className={s.buttonRight}>
-              <Button
-                disabled={requestDisabled}
-                secondary
-                buttonText={
-                  requestDisabled ? "No more ETH" : "Request 0.05 ETH"
-                }
-                handleClick={requestEth}
-              />
+        {loading && (
+          <div className={s.container}>
+            <div className={s.buttonContainer}>
+              <SpinnerLarge />
             </div>
           </div>
-          <Stats
-            balance={faucetBalance}
-            donators={donators}
-            requests={requests}
-          />
-          {/* <Button buttonText="Withdraw" handleClick={withdraw} /> */}
-        </div>
+        )}
+
+        {!loading && (
+          <div className={s.container}>
+            <div className={s.buttonContainer}>
+              <div className={s.buttonLeft}>
+                <Button buttonText="Donate 0.1 ETH " handleClick={donate} />
+              </div>
+              <div className={s.buttonRight}>
+                <Button
+                  disabled={requestDisabled}
+                  secondary
+                  buttonText={
+                    requestDisabled ? "Not enough ETH" : "Request 0.05 ETH"
+                  }
+                  handleClick={requestEth}
+                />
+              </div>
+            </div>
+            {errorMessage && <p>{errorMessage}</p>}
+            <Stats
+              loading={loading}
+              balance={faucetBalance}
+              donators={donators}
+              requests={requests}
+            />
+
+            {/* <Button buttonText="Withdraw" handleClick={withdraw} /> */}
+          </div>
+        )}
       </div>
     </Layout>
   );

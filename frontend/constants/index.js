@@ -59,11 +59,11 @@ export const abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "totalRequestsFromUsers",
+        name: "totalPayouts",
         type: "uint256",
       },
     ],
-    name: "TokensSent",
+    name: "EthSent",
     type: "event",
   },
   {
@@ -94,33 +94,9 @@ export const abi = [
         type: "uint256",
       },
       {
-        internalType: "uint256",
-        name: "lastTimeSentAt",
-        type: "uint256",
-      },
-      {
         internalType: "bool",
-        name: "alreadyDonated",
+        name: "hasDonated",
         type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "userAddress",
-        type: "address",
-      },
-    ],
-    name: "getTimeToWaitUntilNextRequest",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -154,20 +130,7 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "getTotalRequests",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "gettotalDonated",
+    name: "getTotalPayouts",
     outputs: [
       {
         internalType: "uint256",
@@ -193,7 +156,7 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "payOutAmount",
+    name: "payoutAmount",
     outputs: [
       {
         internalType: "uint256",
@@ -202,13 +165,6 @@ export const abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "rescueETH",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -219,7 +175,7 @@ export const abi = [
         type: "address",
       },
     ],
-    name: "sendTokensToAddress",
+    name: "sendEth",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -228,26 +184,13 @@ export const abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "weiAmtPayout",
+        name: "payoutInWei",
         type: "uint256",
       },
     ],
     name: "setPayoutAmt",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalDonated",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -278,7 +221,7 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "totalPaidToUsers",
+    name: "totalPayouts",
     outputs: [
       {
         internalType: "uint256",
@@ -291,17 +234,11 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "totalRequestsFromUsers",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
+    name: "withdrawEth",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];
 export const FAUCET_CONTRACT_ADDRESS =
-  "0x9Aaa0f7C36A2668D38C89379d6738e167A780D21";
+  "0xCf34571D200efD231A9d2D92C8D70385476c27c5";

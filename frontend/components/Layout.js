@@ -10,6 +10,7 @@ export const Layout = ({
   connectWallet,
   account,
   userBalance,
+  loading,
 }) => {
   return (
     <div className={s.container}>
@@ -19,6 +20,7 @@ export const Layout = ({
         connectWallet={connectWallet}
         account={account}
         userBalance={userBalance}
+        loading={loading}
       />
       <div className={s.content}>{children}</div>
       <Footer />

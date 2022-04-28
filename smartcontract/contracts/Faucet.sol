@@ -26,7 +26,7 @@ contract Faucet {
     );
 
     //requested event
-    event TokensSent(
+    event EthSent(
         address indexed userAddress,
         uint256 weiAmount,
         uint256 thisTotal,
@@ -62,7 +62,7 @@ contract Faucet {
         (bool sent, ) = userAddress.call{value: payoutAmount}("");
         require(sent, "Failed to send Ether");
         totalPayouts = totalPayouts + 1;
-        emit TokensSent(userAddress, payoutAmount, address(this).balance, totalPayouts);
+        emit EthSent(userAddress, payoutAmount, address(this).balance, totalPayouts);
         totalFaucetFunds = address(this).balance;
     }
 

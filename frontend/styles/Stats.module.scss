@@ -11,6 +11,7 @@
 
   @media (max-width: $tablet) {
     padding: $space-normal;
+    flex-direction: column;
   }
 }
 
@@ -27,7 +28,7 @@
 
 .statIcon {
   font-size: 48px;
-  color: $green;
+  color: $red;
 }
 
 .statContent {
