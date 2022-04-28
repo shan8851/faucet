@@ -13,16 +13,25 @@
   }
 }
 
-.headerItem {
+.headingWrapper {
   background-color: $dark;
-  padding: $x2 $x4;
+  padding: $x1 $x4;
   border-radius: $x8;
   margin: 0;
   color: $red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   @media (max-width: $phone) {
     margin-bottom: $x2;
     display: flex;
     justify-content: center;
   }
+}
+
+.avatar {
+  height: 30px;
+  width: 30px;
+  margin-right: $x2;
 }

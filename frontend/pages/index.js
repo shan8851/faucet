@@ -22,6 +22,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState("");
   const [allowedToWithdraw, setAllowedToWithdraw] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   const connectWallet = async () => {
     setLoading(true);
@@ -29,6 +30,7 @@ export default function Home() {
     const web3Provider = new ethers.providers.Web3Provider(provider);
     const signer = web3Provider.getSigner();
     const address = await signer.getAddress();
+    await fetchProfileImage(address);
     setAccount(address);
     setWalletConnected(true);
     const network = await web3Provider.getNetwork();
@@ -207,6 +209,13 @@ export default function Home() {
     setAllowedToWithdraw(true);
   };
 
+  const fetchProfileImage = async (id) => {
+    const profileImage = await fetch(
+      `https://web3-images-api.kibalabs.com/v1/accounts/${id}/image`
+    );
+    setAvatar(profileImage.url);
+  };
+
   const requestDisabled = faucetBalance < 50000000000000000;
 
   return (
@@ -217,6 +226,7 @@ export default function Home() {
       account={account}
       userBalance={userBalance}
       loading={loading}
+      avatar={avatar}
     >
       <Head>
         <title>Shan's Rinkeby Faucet</title>

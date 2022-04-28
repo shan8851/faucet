@@ -8,6 +8,7 @@ export const Header = ({
   account,
   connectWallet,
   loading,
+  avatar,
 }) => {
   if (!walletConnected)
     return (
@@ -22,19 +23,18 @@ export const Header = ({
   return (
     <div className={s.container}>
       {loading ? (
-        <div className={s.headerItem}>
+        <div className={s.headingWrapper}>
           <Spinner />
         </div>
       ) : (
-        <p className={s.headerItem}>{`${Number.parseFloat(
-          userBalance
-        ).toPrecision(4)} ETH`}</p>
+        <div className={s.headingWrapper}>
+          <p>{`${Number.parseFloat(userBalance).toPrecision(4)} ETH`}</p>
+        </div>
       )}
-
-      <p className={s.headerItem}>{`${account.substring(
-        0,
-        3
-      )}...${account.substring(39, 46)}`}</p>
+      <div className={s.headingWrapper}>
+        <img src={avatar} className={s.avatar} />
+        <p>{`${account.substring(0, 3)}...${account.substring(39, 46)}`}</p>
+      </div>
     </div>
   );
 };
