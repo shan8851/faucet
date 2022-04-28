@@ -211,7 +211,13 @@ export default function Home() {
 
   const fetchProfileImage = async (id) => {
     const profileImage = await fetch(
-      `https://web3-images-api.kibalabs.com/v1/accounts/${id}/image`
+      `https://web3-images-api.kibalabs.com/v1/accounts/${id}/image`,
+      {
+        mode: "cors",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
     setAvatar(profileImage.url);
   };
@@ -229,7 +235,7 @@ export default function Home() {
       avatar={avatar}
     >
       <Head>
-        <title>Shan's Rinkeby Faucet</title>
+        <title>Rinkedry?</title>
         <meta
           name="description"
           content="A rinkeby faucet allowing you to request and donate Rinkeby ETH"
