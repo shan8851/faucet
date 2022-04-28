@@ -19,8 +19,15 @@
   }
 }
 
+.altColor {
+  color: $green;
+}
+
 .footerLink {
   color: $green;
   font-weight: 700;
   text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }

@@ -1,0 +1,51 @@
+@import "./colors";
+@import "./variables";
+
+.statWrapper {
+  padding: $space-mega;
+  display: flex;
+  justify-content: center;
+  max-width: $small;
+  margin: 0 auto;
+  text-align: center;
+
+  @media (max-width: $tablet) {
+    padding: $space-normal;
+  }
+}
+
+.statContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $space-large;
+  background-color: $dark;
+  margin: $x1;
+  width: 250px;
+  height: 150px;
+}
+
+.statIcon {
+  font-size: 48px;
+  color: $green;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: $x1;
+}
+
+.value {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 100;
+  margin: 0;
+}

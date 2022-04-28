@@ -1,12 +1,14 @@
 import s from "../styles/Footer.module.scss";
+import { FaHeart, FaCoffee } from "react-icons/fa";
 
 export const Footer = () => {
   const TWITTER_HANDLE = "shan8851";
   const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
   return (
-    <div className={s.footer}>
+    <footer className={s.footer}>
       <p className={s.footerText}>
-        Made with ❤️ by
+        Built with <FaHeart className={s.altColor} /> and{" "}
+        <FaCoffee className={s.altColor} /> by{" "}
         <a
           target="_blank"
           rel="noreferrer"
@@ -16,6 +18,6 @@ export const Footer = () => {
           {"  "} @Shan8851
         </a>
       </p>
-    </div>
+    </footer>
   );
 };

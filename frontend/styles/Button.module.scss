@@ -44,6 +44,11 @@
     opacity: 0.6;
   }
 
+  &:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
   @media (max-width: $tablet) {
     height: 40px;
     font-size: 14px;

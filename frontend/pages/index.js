@@ -7,6 +7,7 @@ import { Layout } from "../components/Layout";
 import { Main } from "../components/Main";
 import { Button } from "../components/Button";
 import s from "../styles/Home.module.scss";
+import { Stats } from "../components/Stats";
 
 export default function Home() {
   const [walletConnected, setWalletConnected] = useState(false);
@@ -15,6 +16,8 @@ export default function Home() {
   const [userBalance, setUserBalance] = useState();
   const [networkError, setNetworkError] = useState();
   const [faucetBalance, setFaucetBalance] = useState(0);
+  const [donators, setDonators] = useState(0);
+  const [requests, setRequests] = useState(0);
 
   const connectWallet = async () => {
     const provider = await web3Modal.connect();
@@ -120,6 +123,46 @@ export default function Home() {
     }
   };
 
+  const getTotalDonators = async () => {
+    try {
+      setLoading(true);
+      const provider = await web3Modal.connect();
+      const web3Provider = new ethers.providers.Web3Provider(provider);
+      const signer = web3Provider.getSigner();
+      const faucetContract = new ethers.Contract(
+        FAUCET_CONTRACT_ADDRESS,
+        abi,
+        signer
+      );
+      setDonators(
+        ethers.utils.formatUnits(await faucetContract.getTotalDonators(), 0)
+      );
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getTotalPayouts = async () => {
+    try {
+      setLoading(true);
+      const provider = await web3Modal.connect();
+      const web3Provider = new ethers.providers.Web3Provider(provider);
+      const signer = web3Provider.getSigner();
+      const faucetContract = new ethers.Contract(
+        FAUCET_CONTRACT_ADDRESS,
+        abi,
+        signer
+      );
+      setRequests(
+        ethers.utils.formatUnits(await faucetContract.getTotalPayouts(), 0)
+      );
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // const withdraw = async () => {
   //   try {
   //     const provider = await web3Modal.connect();
@@ -139,6 +182,8 @@ export default function Home() {
   //   }
   // };
 
+  const requestDisabled = faucetBalance < ethers.utils.parseEther("0.05");
+
   return (
     <Layout
       networkError={networkError}
@@ -156,19 +201,26 @@ export default function Home() {
         <Main />
 
         <div className={s.container}>
-          <h1>{ethers.utils.formatEther(faucetBalance)}ETH Available</h1>
           <div className={s.buttonContainer}>
             <div className={s.buttonLeft}>
-              <Button buttonText="Donate 0.1 ETH" handleClick={donate} />
+              <Button buttonText="Donate 0.1 ETH " handleClick={donate} />
             </div>
             <div className={s.buttonRight}>
               <Button
+                disabled={requestDisabled}
                 secondary
-                buttonText="Request 0.5 ETH"
+                buttonText={
+                  requestDisabled ? "No more ETH" : "Request 0.05 ETH"
+                }
                 handleClick={requestEth}
               />
             </div>
           </div>
+          <Stats
+            balance={faucetBalance}
+            donators={donators}
+            requests={requests}
+          />
           {/* <Button buttonText="Withdraw" handleClick={withdraw} /> */}
         </div>
       </div>

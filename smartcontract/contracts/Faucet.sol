@@ -6,8 +6,6 @@ contract Faucet {
     uint256 public totalFaucetFunds;
     uint256 public payoutAmount;
     uint256 public totalDonators;
-    uint256 public totalDonated;
-    uint256 public totalPaidOut;
     uint256 public totalPayouts;
 
     struct Donator {
@@ -43,13 +41,14 @@ contract Faucet {
         payoutAmount = 50000000000000000; //0.05 ETH
         owner = msg.sender;
         totalDonators = 0;
-        totalDonated = 0;
-        totalPaidOut= 0;
         totalPayouts = 0;
     }
 
     function deposit() public payable {
-        // Set amount on frontend
+         if (donators[msg.sender].hasDonated == false) {
+            totalDonators = totalDonators + 1;
+            donators[msg.sender].hasDonated = true;
+        }
         emit Deposited(msg.sender, msg.value, address(this).balance, totalDonators);
         totalFaucetFunds = address(this).balance;
     }
@@ -62,19 +61,9 @@ contract Faucet {
     function sendEth(address payable userAddress) public {
         (bool sent, ) = userAddress.call{value: payoutAmount}("");
         require(sent, "Failed to send Ether");
-        //update public variables
-        totalPaidOut = totalPaidOut + payoutAmount;
         totalPayouts = totalPayouts + 1;
-        //update user variables
-        donators[userAddress].amountRequested =
-            donators[userAddress].amountRequested +
-            payoutAmount;
         emit TokensSent(userAddress, payoutAmount, address(this).balance, totalPayouts);
         totalFaucetFunds = address(this).balance;
-    }
-
-    function gettotalDonated() public view returns (uint256) {
-        return totalDonated;
     }
 
     function getTotalDonators() public view returns (uint256) {

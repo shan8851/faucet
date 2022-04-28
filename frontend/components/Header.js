@@ -19,14 +19,13 @@ export const Header = ({
     );
   return (
     <div className={s.container}>
-      <Button
-        secondary
-        buttonText={`${Number.parseFloat(userBalance).toPrecision(4)} ETH`}
-      />
-      <Button
-        secondary
-        buttonText={`${account.substring(0, 3)}...${account.substring(39, 46)}`}
-      />
+      <p className={s.headerItem}>{`${Number.parseFloat(
+        userBalance
+      ).toPrecision(4)} ETH`}</p>
+      <p className={s.headerItem}>{`${account.substring(
+        0,
+        3
+      )}...${account.substring(39, 46)}`}</p>
     </div>
   );
 };
