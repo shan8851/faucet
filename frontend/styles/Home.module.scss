@@ -33,3 +33,23 @@
 .buttonRight {
   margin-left: $x1;
 }
+
+.success {
+  background-color: $green;
+  font-weight: 700;
+  padding: $x1;
+  color: $extraDark;
+  width: fit-content;
+  margin: $x2 auto;
+  border-radius: $x1;
+}
+
+.error {
+  background-color: $error;
+  font-weight: 700;
+  padding: $x1;
+  color: #fff;
+  width: fit-content;
+  margin: $x2 auto;
+  border-radius: $x1;
+}

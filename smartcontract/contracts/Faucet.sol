@@ -7,11 +7,13 @@ contract Faucet {
     uint256 public payoutAmount;
     uint256 public totalDonators;
     uint256 public totalPayouts;
+    uint256 constant public waitTime = 1 days;
 
     struct Donator {
         uint256 amountRequested;
         uint256 amountDeposited;
         bool hasDonated;
+        uint256 lastTimeSentAt;
     }
 
     //mapping user address to user(donator) struct
@@ -64,6 +66,7 @@ contract Faucet {
         totalPayouts = totalPayouts + 1;
         emit EthSent(userAddress, payoutAmount, address(this).balance, totalPayouts);
         totalFaucetFunds = address(this).balance;
+        donators[msg.sender].lastTimeSentAt = block.timestamp + waitTime;
     }
 
     function getTotalDonators() public view returns (uint256) {
@@ -76,6 +79,15 @@ contract Faucet {
 
     function getTotalFaucetFunds() public view returns (uint256) {
         return totalFaucetFunds;
+    }
+
+        function allowedToRequestPayout(address _address) public view returns (bool) {
+        if(donators[_address].lastTimeSentAt == 0) {
+            return true;
+        } else if(block.timestamp >= donators[_address].lastTimeSentAt) {
+            return true;
+        }
+        return false;
     }
     function withdrawEth()public{
         require(msg.sender == owner);

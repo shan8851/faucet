@@ -67,6 +67,25 @@ export const abi = [
     type: "event",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+    ],
+    name: "allowedToRequestPayout",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "deposit",
     outputs: [],
@@ -97,6 +116,11 @@ export const abi = [
         internalType: "bool",
         name: "hasDonated",
         type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "lastTimeSentAt",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -234,6 +258,19 @@ export const abi = [
   },
   {
     inputs: [],
+    name: "waitTime",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "withdrawEth",
     outputs: [],
     stateMutability: "nonpayable",
@@ -241,4 +278,4 @@ export const abi = [
   },
 ];
 export const FAUCET_CONTRACT_ADDRESS =
-  "0xCf34571D200efD231A9d2D92C8D70385476c27c5";
+  "0x6fAf983B0Fc99eDA60E7704432a02c28CD4789Df";
