@@ -92,7 +92,7 @@ export default function Home() {
         signer
       );
       const tx = await faucetContract.deposit({
-        value: ethers.utils.parseUnits("3.9", "ether"),
+        value: ethers.utils.parseUnits("0.1", "ether"),
       });
       await tx.wait();
       await fetchData();
