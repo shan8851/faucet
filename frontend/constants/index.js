@@ -32,7 +32,7 @@ export const abi = [
         type: "uint256",
       },
     ],
-    name: "Deposited",
+    name: "Donated",
     type: "event",
   },
   {
@@ -95,6 +95,25 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "donatorAddresses",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "",
         type: "address",
@@ -103,13 +122,13 @@ export const abi = [
     name: "donators",
     outputs: [
       {
-        internalType: "uint256",
-        name: "amountRequested",
-        type: "uint256",
+        internalType: "address",
+        name: "walletAddress",
+        type: "address",
       },
       {
         internalType: "uint256",
-        name: "amountDeposited",
+        name: "amountDonated",
         type: "uint256",
       },
       {
@@ -121,6 +140,60 @@ export const abi = [
         internalType: "uint256",
         name: "lastTimeSentAt",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getDonatorAddresses",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "addr",
+        type: "address",
+      },
+    ],
+    name: "getIndividualDonator",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "walletAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amountDonated",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "hasDonated",
+            type: "bool",
+          },
+          {
+            internalType: "uint256",
+            name: "lastTimeSentAt",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Faucet.Donator",
+        name: "",
+        type: "tuple",
       },
     ],
     stateMutability: "view",
@@ -278,4 +351,4 @@ export const abi = [
   },
 ];
 export const FAUCET_CONTRACT_ADDRESS =
-  "0x6fAf983B0Fc99eDA60E7704432a02c28CD4789Df";
+  "0x36B5bd9240B276487552beB01baB972174f091B2";

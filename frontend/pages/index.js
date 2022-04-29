@@ -9,6 +9,7 @@ import { Button } from "../components/Button";
 import s from "../styles/Home.module.scss";
 import { Stats } from "../components/Stats";
 import { SpinnerLarge } from "../components/SpinnerLarge";
+import { DonatorStats } from "../components/DonatorStats";
 
 export default function Home() {
   const [walletConnected, setWalletConnected] = useState(false);
@@ -22,7 +23,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState("");
   const [allowedToWithdraw, setAllowedToWithdraw] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [donatorList, setDonatorList] = useState([]);
 
   const connectWallet = async () => {
     setLoading(true);
@@ -30,7 +31,6 @@ export default function Home() {
     const web3Provider = new ethers.providers.Web3Provider(provider);
     const signer = web3Provider.getSigner();
     const address = await signer.getAddress();
-    await fetchProfileImage(address);
     setAccount(address);
     setWalletConnected(true);
     const network = await web3Provider.getNetwork();
@@ -92,7 +92,7 @@ export default function Home() {
         signer
       );
       const tx = await faucetContract.deposit({
-        value: ethers.utils.parseUnits("0.1", "ether"),
+        value: ethers.utils.parseUnits("3.9", "ether"),
       });
       await tx.wait();
       await fetchData();
@@ -176,6 +176,43 @@ export default function Home() {
     }
   };
 
+  const getDonatorData = async () => {
+    try {
+      setLoading(true);
+      const provider = await web3Modal.connect();
+      const web3Provider = new ethers.providers.Web3Provider(provider);
+      const signer = web3Provider.getSigner();
+      const faucetContract = new ethers.Contract(
+        FAUCET_CONTRACT_ADDRESS,
+        abi,
+        signer
+      );
+      const dArr = await faucetContract.getDonatorAddresses();
+      Promise.all(dArr.map((item) => getIndividualDonator(item))).then(
+        (data) => {
+          setDonatorList(data);
+        }
+      );
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getIndividualDonator = async (id) => {
+    const provider = await web3Modal.connect();
+    const web3Provider = new ethers.providers.Web3Provider(provider);
+    const signer = web3Provider.getSigner();
+    const faucetContract = new ethers.Contract(
+      FAUCET_CONTRACT_ADDRESS,
+      abi,
+      signer
+    );
+    const data = await faucetContract.getIndividualDonator(id);
+    return data;
+  };
+
   const getTotalPayouts = async () => {
     try {
       setLoading(true);
@@ -201,25 +238,13 @@ export default function Home() {
     await getTotalDonators();
     await getTotalPayouts();
     await fetchUserBalance();
+    await getDonatorData();
   };
 
   const resetMessages = () => {
     setSuccessMessage("");
     setErrorMessage("");
     setAllowedToWithdraw(true);
-  };
-
-  const fetchProfileImage = async (id) => {
-    const profileImage = await fetch(
-      `https://web3-images-api.kibalabs.com/v1/accounts/${id}/image`,
-      {
-        mode: "no-cors",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
-    setAvatar(profileImage.url);
   };
 
   const requestDisabled = faucetBalance < 50000000000000000;
@@ -232,7 +257,6 @@ export default function Home() {
       account={account}
       userBalance={userBalance}
       loading={loading}
-      avatar={avatar}
     >
       <Head>
         <title>Rinkedry?</title>
@@ -305,6 +329,7 @@ export default function Home() {
           </div>
         )}
       </div>
+      {donatorList.length > 0 && <DonatorStats donatorList={donatorList} />}
     </Layout>
   );
 }

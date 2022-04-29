@@ -1,0 +1,54 @@
+@import "./colors";
+@import "./variables";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.donator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $dark;
+  padding: $x2;
+  border-radius: $x4;
+  margin: $x2 0;
+  max-width: $small;
+  width: 100%;
+
+  @media (max-width: $tablet) {
+    padding: $x1;
+    border-radius: $x3;
+    margin: $x1;
+  }
+}
+
+.avatar {
+  height: 30px;
+  width: 30px;
+  margin-right: $x1;
+
+  @media (max-width: $tablet) {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.address {
+  @media (max-width: $tablet) {
+    font-size: 12px;
+  }
+}
+
+.amount {
+  color: $green;
+  font-weight: 700;
+  margin-left: $x1;
+
+  @media (max-width: $tablet) {
+    font-size: 12px;
+  }
+}

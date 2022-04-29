@@ -28,10 +28,16 @@
 
 .buttonLeft {
   margin-right: $x1;
+  @media (max-width: $tablet) {
+    margin-right: unset;
+  }
 }
 
 .buttonRight {
   margin-left: $x1;
+  @media (max-width: $tablet) {
+    margin-left: unset;
+  }
 }
 
 .success {

@@ -7,10 +7,10 @@ contract Faucet {
     uint256 public payoutAmount;
     uint256 public totalDonators;
     uint256 public totalPayouts;
-    uint256 constant public waitTime = 1 days;
+    uint256 public constant waitTime = 1 days;
 
     struct Donator {
-        uint256 amountRequested;
+        address walletAddress;
         uint256 amountDonated;
         bool hasDonated;
         uint256 lastTimeSentAt;
@@ -19,7 +19,7 @@ contract Faucet {
     //mapping user address to user(donator) struct
     mapping(address => Donator) public donators;
 
-    Donator[] donatorArray;
+    address[] public donatorAddresses;
 
     //deopist event
     event Donated(
@@ -49,18 +49,25 @@ contract Faucet {
     }
 
     function deposit() public payable {
-         if (donators[msg.sender].hasDonated == false) {
+        if (donators[msg.sender].hasDonated == false) {
             totalDonators = totalDonators + 1;
             donators[msg.sender].hasDonated = true;
             donators[msg.sender].amountDonated =
                 donators[msg.sender].amountDonated +
                 msg.value;
+            donators[msg.sender].walletAddress = msg.sender;
+            donatorAddresses.push(msg.sender);
         } else {
-                        donators[msg.sender].amountDonated =
+            donators[msg.sender].amountDonated =
                 donators[msg.sender].amountDonated +
                 msg.value;
         }
-        emit Donated(msg.sender, msg.value, address(this).balance, totalDonators);
+        emit Donated(
+            msg.sender,
+            msg.value,
+            address(this).balance,
+            totalDonators
+        );
         totalFaucetFunds = address(this).balance;
     }
 
@@ -73,13 +80,26 @@ contract Faucet {
         (bool sent, ) = userAddress.call{value: payoutAmount}("");
         require(sent, "Failed to send Ether");
         totalPayouts = totalPayouts + 1;
-        emit EthSent(userAddress, payoutAmount, address(this).balance, totalPayouts);
+        emit EthSent(
+            userAddress,
+            payoutAmount,
+            address(this).balance,
+            totalPayouts
+        );
         totalFaucetFunds = address(this).balance;
         donators[msg.sender].lastTimeSentAt = block.timestamp + waitTime;
     }
 
     function getTotalDonators() public view returns (uint256) {
         return totalDonators;
+    }
+
+    function getIndividualDonator(address addr)
+        public
+        view
+        returns (Donator memory)
+    {
+        return donators[addr];
     }
 
     function getTotalPayouts() public view returns (uint256) {
@@ -90,23 +110,27 @@ contract Faucet {
         return totalFaucetFunds;
     }
 
-    function getDonators() public view returns (Donator[] memory) {
-        return donatorArray;
+    function getDonatorAddresses() public view returns (address[] memory) {
+        return donatorAddresses;
     }
 
-        function allowedToRequestPayout(address _address) public view returns (bool) {
-        if(donators[_address].lastTimeSentAt == 0) {
+    function allowedToRequestPayout(address _address)
+        public
+        view
+        returns (bool)
+    {
+        if (donators[_address].lastTimeSentAt == 0) {
             return true;
-        } else if(block.timestamp >= donators[_address].lastTimeSentAt) {
+        } else if (block.timestamp >= donators[_address].lastTimeSentAt) {
             return true;
         }
         return false;
     }
-    function withdrawEth()public{
+
+    function withdrawEth() public {
         require(msg.sender == owner);
         (bool sent, ) = owner.call{value: totalFaucetFunds}("");
         require(sent, "Failed to send Ether");
         totalFaucetFunds = address(this).balance;
     }
-
 }

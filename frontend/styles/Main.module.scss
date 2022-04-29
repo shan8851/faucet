@@ -26,3 +26,12 @@
     font-size: 14px;
   }
 }
+
+.link {
+  color: $red;
+  font-weight: 700;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
