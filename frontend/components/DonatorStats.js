@@ -11,8 +11,7 @@ export const DonatorStats = ({ donatorList }) => {
       {sortedArray.map((donator) => {
         const amount = ethers.utils.formatEther(donator.amountDonated);
         return (
-          <div className={s.donator}>
-            {console.log("DONATOR", donator.amountDonated)}
+          <div key={donator.walletAddress} className={s.donator}>
             <img
               src={`https://web3-images-api.kibalabs.com/v1/accounts/${donator.walletAddress}/image`}
               className={s.avatar}

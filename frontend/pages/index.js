@@ -31,13 +31,17 @@ export default function Home() {
     const web3Provider = new ethers.providers.Web3Provider(provider);
     const signer = web3Provider.getSigner();
     const address = await signer.getAddress();
-    setAccount(address);
+    const checkForEnsDomain = await web3Provider.lookupAddress(address);
+    checkForEnsDomain !== null
+      ? setAccount(checkForEnsDomain)
+      : setAccount(address);
     setWalletConnected(true);
     const network = await web3Provider.getNetwork();
     if (network.chainId !== 4) {
       setNetworkError(true);
     }
     await fetchData();
+
     setLoading(false);
     resetMessages();
   };
