@@ -11,6 +11,7 @@ export const Layout = ({
   account,
   userBalance,
   loading,
+  avatar,
 }) => {
   return (
     <div className={s.container}>
@@ -21,6 +22,7 @@ export const Layout = ({
         account={account}
         userBalance={userBalance}
         loading={loading}
+        avatar={avatar}
       />
       <div className={s.content}>{children}</div>
       <Footer />

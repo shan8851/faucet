@@ -15,6 +15,7 @@ export default function Home() {
   const [walletConnected, setWalletConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState();
+  const [avatar, setAvatar] = useState("");
   const [userBalance, setUserBalance] = useState();
   const [networkError, setNetworkError] = useState();
   const [faucetBalance, setFaucetBalance] = useState(0);
@@ -31,11 +32,12 @@ export default function Home() {
     const web3Provider = new ethers.providers.Web3Provider(provider);
     const signer = web3Provider.getSigner();
     const address = await signer.getAddress();
-    const checkForEnsDomain = await web3Provider.lookupAddress(address);
-    checkForEnsDomain !== null
-      ? setAccount(checkForEnsDomain)
-      : setAccount(address);
+    const checkForEns = await lookupEnsAddress(address);
+    checkForEns !== null ? setAccount(checkForEns) : setAccount(address);
     setWalletConnected(true);
+    setAvatar(
+      `https://web3-images-api.kibalabs.com/v1/accounts/${address}/image`
+    );
     const network = await web3Provider.getNetwork();
     if (network.chainId !== 4) {
       setNetworkError(true);
@@ -71,6 +73,14 @@ export default function Home() {
       cacheProvider: true,
     });
   }
+
+  const lookupEnsAddress = async (walletAddress) => {
+    const provider = await web3Modal.connect();
+    const web3Provider = new ethers.providers.Web3Provider(provider);
+
+    const checkForEnsDomain = await web3Provider.lookupAddress(walletAddress);
+    return checkForEnsDomain;
+  };
 
   const fetchUserBalance = async () => {
     setLoading(true);
@@ -261,6 +271,7 @@ export default function Home() {
       account={account}
       userBalance={userBalance}
       loading={loading}
+      avatar={avatar}
     >
       <Head>
         <title>Rinkedry?</title>

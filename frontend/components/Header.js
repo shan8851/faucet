@@ -8,6 +8,7 @@ export const Header = ({
   account,
   connectWallet,
   loading,
+  avatar,
 }) => {
   if (!walletConnected)
     return (
@@ -31,11 +32,12 @@ export const Header = ({
         </div>
       )}
       <div className={s.headingWrapper}>
-        <img
-          src={`https://web3-images-api.kibalabs.com/v1/accounts/${account}/image`}
-          className={s.avatar}
-        />
-        <p>{`${account.substring(0, 3)}...${account.substring(39, 46)}`}</p>
+        <img src={avatar} className={s.avatar} />
+        <p>
+          {account.length !== 42
+            ? account
+            : `${account.substring(0, 3)}...${account.substring(39, 46)}`}
+        </p>
       </div>
     </div>
   );
