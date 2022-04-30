@@ -8,6 +8,11 @@
   align-items: center;
 }
 
+.wrapper {
+  max-height: 400px;
+  overflow: scroll;
+}
+
 .donator {
   display: flex;
   align-items: center;
