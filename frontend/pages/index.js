@@ -285,7 +285,35 @@ export default function Home() {
           sizes="180x180"
           href="/apple-touch-icon.png"
         />
-        <meta property="og:image" content="/rinkedryOg.png" />
+
+        {/* <!-- Facebook Meta Tags --> */}
+        <meta property="og:url" content="https://rinkedry.vercel.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Rinkedry?" />
+        <meta
+          property="og:description"
+          content="A rinkeby faucet allowing you to request and donate Rinkeby ETH"
+        />
+        <meta
+          property="og:image"
+          content="https://rinkedry.vercel.app/rinkedryOg.png"
+        />
+
+        {/* <!-- Twitter Meta Tags --> */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="rinkedry.vercel.app" />
+        <meta property="twitter:url" content="https://rinkedry.vercel.app/" />
+        <meta name="twitter:title" content="Rinkedry?" />
+        <meta
+          name="twitter:description"
+          content="A rinkeby faucet allowing you to request and donate Rinkeby ETH"
+        />
+        <meta
+          name="twitter:image"
+          content="https://rinkedry.vercel.app/rinkedryOg.png"
+        />
+
+        {/* <!-- Meta Tags Generated via https://www.opengraph.xyz --></meta> */}
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="theme-color" content="#181820" />
