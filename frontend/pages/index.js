@@ -330,7 +330,7 @@ export default function Home() {
         <meta name="theme-color" content="#181820" />
       </Head>
       <div>
-        <Main />
+        <Main walletConnected={walletConnected} />
         {loading && (
           <div className={s.container}>
             <div className={s.buttonContainer}>
@@ -339,7 +339,7 @@ export default function Home() {
           </div>
         )}
 
-        {!loading && (
+        {!loading && walletConnected && (
           <div className={s.container}>
             <div className={s.buttonContainer}>
               <div className={s.buttonLeft}>
@@ -364,12 +364,14 @@ export default function Home() {
                 tomorrow!
               </p>
             )}
-            <Stats
-              loading={loading}
-              balance={faucetBalance}
-              donators={donators}
-              requests={requests}
-            />
+            {walletConnected && (
+              <Stats
+                loading={loading}
+                balance={faucetBalance}
+                donators={donators}
+                requests={requests}
+              />
+            )}
           </div>
         )}
       </div>

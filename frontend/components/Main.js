@@ -1,6 +1,6 @@
 import s from "../styles/Main.module.scss";
 
-export const Main = () => {
+export const Main = ({ walletConnected }) => {
   return (
     <div className={s.container}>
       <h1 className={s.header}>Rinkedry?</h1>
@@ -24,6 +24,7 @@ export const Main = () => {
         </a>
         , check them out!
       </p>
+      {!walletConnected && <p>Connect your wallet to get started</p>}
     </div>
   );
 };
