@@ -10,6 +10,7 @@ import s from "../styles/Home.module.scss";
 import { Stats } from "../components/Stats";
 import { SpinnerLarge } from "../components/SpinnerLarge";
 import { DonatorStats } from "../components/DonatorStats";
+import { providerOptions } from "../helpers/providerOptions";
 
 export default function Home() {
   const [walletConnected, setWalletConnected] = useState(false);
@@ -69,8 +70,9 @@ export default function Home() {
   let web3Modal;
   if (typeof window !== "undefined") {
     web3Modal = new Web3Modal({
-      network: "rinkeby", // optional
+      network: "rinkeby",
       cacheProvider: true,
+      providerOptions,
     });
   }
 
