@@ -93,7 +93,7 @@ export default function Home() {
     setLoading(false);
   };
 
-  const donate = async () => {
+  const donate = async (amount) => {
     try {
       setLoading(true);
       resetMessages();
@@ -106,7 +106,7 @@ export default function Home() {
         signer
       );
       const tx = await faucetContract.deposit({
-        value: ethers.utils.parseUnits("0.1", "ether"),
+        value: ethers.utils.parseUnits(amount, "ether"),
       });
       await tx.wait();
       await fetchData();
@@ -342,19 +342,33 @@ export default function Home() {
         {!loading && walletConnected && (
           <div className={s.container}>
             <div className={s.buttonContainer}>
-              <div className={s.buttonLeft}>
-                <Button buttonText="Donate 0.1 ETH " handleClick={donate} />
-              </div>
-              <div className={s.buttonRight}>
-                <Button
-                  disabled={requestDisabled}
-                  secondary
-                  buttonText={
-                    requestDisabled ? "Not enough ETH" : "Request 0.05 ETH"
-                  }
-                  handleClick={requestEth}
-                />
-              </div>
+              <Button
+                disabled={requestDisabled}
+                buttonText={
+                  requestDisabled ? "Not enough ETH" : "Request 0.05 ETH"
+                }
+                handleClick={requestEth}
+              />
+            </div>
+            <div className={s.donateContainer}>
+              <Button
+                className={s.button}
+                buttonText="Donate 0.1 ETH "
+                handleClick={() => donate("0.1")}
+                secondary
+              />
+              <Button
+                className={s.button}
+                buttonText="Donate 1 ETH "
+                handleClick={() => donate("1")}
+                secondary
+              />
+              <Button
+                className={s.button}
+                buttonText="Donate 10 ETH "
+                handleClick={() => donate("10")}
+                secondary
+              />
             </div>
             {successMessage && <p className={s.success}>{successMessage}</p>}
             {errorMessage && <p className={s.error}>{errorMessage}</p>}

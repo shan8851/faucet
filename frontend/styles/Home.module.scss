@@ -26,18 +26,18 @@
   }
 }
 
-.buttonLeft {
-  margin-right: $x1;
+.donateContainer {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
   @media (max-width: $tablet) {
-    margin-right: unset;
+    flex-direction: column;
+    justify-content: center;
   }
 }
 
-.buttonRight {
-  margin-left: $x1;
-  @media (max-width: $tablet) {
-    margin-left: unset;
-  }
+.button {
+  margin: 0 $x1;
 }
 
 .success {
