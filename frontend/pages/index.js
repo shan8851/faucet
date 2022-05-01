@@ -341,7 +341,7 @@ export default function Home() {
           </div>
         )}
 
-        {!loading && walletConnected && (
+        {!loading && walletConnected && !networkError && (
           <div className={s.container}>
             <div className={s.buttonContainer}>
               <Button

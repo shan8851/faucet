@@ -16,4 +16,8 @@
   font-weight: 900;
   font-size: 24px;
   margin: 0;
+
+  @media (max-width: $tablet) {
+    font-size: 14px;
+  }
 }

@@ -17,8 +17,11 @@ export const DonatorStats = ({ donatorList }) => {
                 src={`https://web3-images-api.kibalabs.com/v1/accounts/${donator.walletAddress}/image`}
                 className={s.avatar}
               />
-              <p className={s.address}>{donator.walletAddress}</p>
-              <p className={s.amount}>{amount} ETH</p>
+              <div className={s.deets}>
+                {" "}
+                <p className={s.address}>{donator.walletAddress}</p>
+                <p className={s.amount}>{amount} ETH</p>
+              </div>
             </div>
           );
         })}

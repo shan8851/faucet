@@ -6,6 +6,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .wrapper {
@@ -16,7 +17,7 @@
 .donator {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   background-color: $dark;
   padding: $x2;
   border-radius: $x4;
@@ -24,10 +25,11 @@
   max-width: $small;
   width: 100%;
 
-  @media (max-width: $tablet) {
+  @media (max-width: $phone) {
     padding: $x1;
     border-radius: $x3;
-    margin: $x1;
+
+    width: 90vw;
   }
 }
 
@@ -35,25 +37,31 @@
   height: 30px;
   width: 30px;
   margin-right: $x1;
+}
 
-  @media (max-width: $tablet) {
-    height: 20px;
-    width: 20px;
+.deets {
+  display: flex;
+  align-items: center;
+  @media (max-width: $phone) {
+    flex-direction: column-reverse;
+    justify-content: center;
   }
 }
 
 .address {
   @media (max-width: $tablet) {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 
 .amount {
   color: $green;
   font-weight: 700;
-  margin-left: $x1;
+  margin: 0 0 0 $x1;
 
   @media (max-width: $tablet) {
     font-size: 12px;
+    margin: 0 0 0 4px;
+    font-size: 10px;
   }
 }
