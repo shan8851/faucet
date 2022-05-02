@@ -44,7 +44,8 @@ export default function Home() {
     if (network.chainId !== 4) {
       setNetworkError(true);
     }
-    await fetchData();
+    await fetchUserData();
+    fetchStatsData();
 
     setLoading(false);
     resetMessages();
@@ -112,7 +113,8 @@ export default function Home() {
         value: ethers.utils.parseUnits(amount, "ether"),
       });
       await tx.wait();
-      await fetchData();
+      await fetchUserData();
+      await fetchStatsData();
       setSuccessMessage("Your donation was successful - thanks so much");
       setLoading(false);
     } catch (err) {
@@ -140,7 +142,8 @@ export default function Home() {
         resetMessages();
         const tx = await faucetContract.sendEth(account);
         await tx.wait();
-        await fetchData();
+        await fetchUserData();
+        await fetchStatsData();
         setSuccessMessage("Success, don't spend it all at once!");
         setLoading(false);
       } catch (err) {
@@ -250,12 +253,15 @@ export default function Home() {
     }
   };
 
-  const fetchData = async () => {
+  const fetchUserData = async () => {
+    await fetchUserBalance();
+    await getDonatorData();
+  };
+
+  const fetchStatsData = async () => {
     await getFaucetBalance();
     await getTotalDonators();
     await getTotalPayouts();
-    await fetchUserBalance();
-    await getDonatorData();
   };
 
   const resetMessages = () => {
