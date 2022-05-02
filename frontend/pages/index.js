@@ -377,8 +377,7 @@ export default function Home() {
             {errorMessage && <p className={s.error}>{errorMessage}</p>}
             {!allowedToWithdraw && (
               <p className={s.error}>
-                You can only request funds once every 24 hours, come back
-                tomorrow!
+                You can only request funds once every 24 hours, come back later!
               </p>
             )}
             <Stats
