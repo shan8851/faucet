@@ -81,7 +81,6 @@ export default function Home() {
   const lookupEnsAddress = async (walletAddress) => {
     const provider = await web3Modal.connect();
     const web3Provider = new ethers.providers.Web3Provider(provider);
-
     const checkForEnsDomain = await web3Provider.lookupAddress(walletAddress);
     return checkForEnsDomain;
   };
@@ -133,7 +132,7 @@ export default function Home() {
     const faucetContract = new ethers.Contract(
       FAUCET_CONTRACT_ADDRESS,
       abi,
-      signer
+      web3Provider
     );
     const isAllowed = await faucetContract.allowedToRequestPayout(account);
     if (isAllowed) {
@@ -161,11 +160,10 @@ export default function Home() {
       setStatsLoading(true);
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
-      const signer = web3Provider.getSigner();
       const faucetContract = new ethers.Contract(
         FAUCET_CONTRACT_ADDRESS,
         abi,
-        signer
+        web3Provider
       );
       setFaucetBalance(
         ethers.utils.formatUnits(await faucetContract.getTotalFaucetFunds(), 0)
@@ -181,11 +179,10 @@ export default function Home() {
       setStatsLoading(true);
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
-      const signer = web3Provider.getSigner();
       const faucetContract = new ethers.Contract(
         FAUCET_CONTRACT_ADDRESS,
         abi,
-        signer
+        web3Provider
       );
       setDonators(
         ethers.utils.formatUnits(await faucetContract.getTotalDonators(), 0)
@@ -201,11 +198,10 @@ export default function Home() {
       setLoading(true);
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
-      const signer = web3Provider.getSigner();
       const faucetContract = new ethers.Contract(
         FAUCET_CONTRACT_ADDRESS,
         abi,
-        signer
+        web3Provider
       );
       const dArr = await faucetContract.getDonatorAddresses();
       Promise.all(dArr.map((item) => getIndividualDonator(item))).then(
@@ -223,11 +219,10 @@ export default function Home() {
   const getIndividualDonator = async (id) => {
     const provider = await web3Modal.connect();
     const web3Provider = new ethers.providers.Web3Provider(provider);
-    const signer = web3Provider.getSigner();
     const faucetContract = new ethers.Contract(
       FAUCET_CONTRACT_ADDRESS,
       abi,
-      signer
+      web3Provider
     );
     const data = await faucetContract.getIndividualDonator(id);
     return data;
@@ -238,11 +233,10 @@ export default function Home() {
       setStatsLoading(true);
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
-      const signer = web3Provider.getSigner();
       const faucetContract = new ethers.Contract(
         FAUCET_CONTRACT_ADDRESS,
         abi,
-        signer
+        web3Provider
       );
       setRequests(
         ethers.utils.formatUnits(await faucetContract.getTotalPayouts(), 0)
@@ -389,12 +383,15 @@ export default function Home() {
             )}
           </div>
         )}
-        <Stats
-          loading={statsLoading}
-          balance={faucetBalance}
-          donators={donators}
-          requests={requests}
-        />
+        <div className={s.statsContainer}>
+          {" "}
+          <Stats
+            loading={statsLoading}
+            balance={faucetBalance}
+            donators={donators}
+            requests={requests}
+          />
+        </div>
       </div>
       {donatorList.length > 0 && <DonatorStats donatorList={donatorList} />}
     </Layout>
