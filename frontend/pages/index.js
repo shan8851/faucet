@@ -381,17 +381,14 @@ export default function Home() {
                 tomorrow!
               </p>
             )}
+            <Stats
+              loading={statsLoading}
+              balance={faucetBalance}
+              donators={donators}
+              requests={requests}
+            />
           </div>
         )}
-        <div className={s.statsContainer}>
-          {" "}
-          <Stats
-            loading={statsLoading}
-            balance={faucetBalance}
-            donators={donators}
-            requests={requests}
-          />
-        </div>
       </div>
       {donatorList.length > 0 && <DonatorStats donatorList={donatorList} />}
     </Layout>
