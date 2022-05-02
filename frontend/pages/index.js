@@ -52,6 +52,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    fetchStatsData();
     if (web3Modal.cachedProvider) {
       connectWallet();
     }
