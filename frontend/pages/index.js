@@ -15,6 +15,7 @@ import { providerOptions } from "../helpers/providerOptions";
 export default function Home() {
   const [walletConnected, setWalletConnected] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [statsLoading, setStatsLoading] = useState(false);
   const [account, setAccount] = useState();
   const [avatar, setAvatar] = useState("");
   const [userBalance, setUserBalance] = useState();
@@ -154,7 +155,7 @@ export default function Home() {
 
   const getFaucetBalance = async () => {
     try {
-      setLoading(true);
+      setStatsLoading(true);
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const signer = web3Provider.getSigner();
@@ -166,7 +167,7 @@ export default function Home() {
       setFaucetBalance(
         ethers.utils.formatUnits(await faucetContract.getTotalFaucetFunds(), 0)
       );
-      setLoading(false);
+      setStatsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -174,7 +175,7 @@ export default function Home() {
 
   const getTotalDonators = async () => {
     try {
-      setLoading(true);
+      setStatsLoading(true);
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const signer = web3Provider.getSigner();
@@ -186,7 +187,7 @@ export default function Home() {
       setDonators(
         ethers.utils.formatUnits(await faucetContract.getTotalDonators(), 0)
       );
-      setLoading(false);
+      setStatsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -231,7 +232,7 @@ export default function Home() {
 
   const getTotalPayouts = async () => {
     try {
-      setLoading(true);
+      setStatsLoading(true);
       const provider = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const signer = web3Provider.getSigner();
@@ -243,7 +244,7 @@ export default function Home() {
       setRequests(
         ethers.utils.formatUnits(await faucetContract.getTotalPayouts(), 0)
       );
-      setLoading(false);
+      setStatsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -380,16 +381,14 @@ export default function Home() {
                 tomorrow!
               </p>
             )}
-            {walletConnected && (
-              <Stats
-                loading={loading}
-                balance={faucetBalance}
-                donators={donators}
-                requests={requests}
-              />
-            )}
           </div>
         )}
+        <Stats
+          loading={statsLoading}
+          balance={faucetBalance}
+          donators={donators}
+          requests={requests}
+        />
       </div>
       {donatorList.length > 0 && <DonatorStats donatorList={donatorList} />}
     </Layout>
