@@ -132,7 +132,7 @@ export default function Home() {
     const faucetContract = new ethers.Contract(
       FAUCET_CONTRACT_ADDRESS,
       abi,
-      web3Provider
+      signer
     );
     const isAllowed = await faucetContract.allowedToRequestPayout(account);
     if (isAllowed) {
