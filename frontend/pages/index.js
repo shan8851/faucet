@@ -56,7 +56,6 @@ export default function Home() {
     if (web3Modal.cachedProvider) {
       connectWallet();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
