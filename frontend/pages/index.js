@@ -340,7 +340,7 @@ export default function Home() {
       </Head>
       <div>
         <Main walletConnected={walletConnected} />
-        {loading && (
+        {loading && walletConnected && (
           <div className={s.container}>
             <div className={s.buttonContainer}>
               <SpinnerLarge />
