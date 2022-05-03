@@ -353,6 +353,7 @@ export default function Home() {
             <div className={s.buttonContainer}>
               <Button
                 disabled={requestDisabled}
+                full
                 buttonText={
                   requestDisabled ? "Not enough ETH" : "Request 0.05 ETH"
                 }
@@ -388,12 +389,14 @@ export default function Home() {
             )}
           </div>
         )}
-        <Stats
-          loading={statsLoading}
-          balance={faucetBalance}
-          donators={donators}
-          requests={requests}
-        />
+        <div className={s.statsContainer}>
+          <Stats
+            loading={statsLoading}
+            balance={faucetBalance}
+            donators={donators}
+            requests={requests}
+          />
+        </div>
       </div>
       {donatorList.length > 0 && <DonatorStats donatorList={donatorList} />}
     </Layout>

@@ -21,15 +21,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: $tablet;
+  margin: auto;
   @media (max-width: $tablet) {
     flex-direction: column;
+    width: 200px;
   }
 }
 
 .donateContainer {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
+  width: $tablet;
+  margin: auto;
   @media (max-width: $tablet) {
     flex-direction: column;
     justify-content: center;
