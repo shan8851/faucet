@@ -28,6 +28,9 @@ export default function Home() {
   const [successMessage, setSuccessMessage] = useState("");
   const [donatorList, setDonatorList] = useState([]);
 
+  const infuraId = "3ca7342481924a97a708c6e315c50e93";
+
+  // Connect Wallet
   const connectWallet = async () => {
     setLoading(true);
     const provider = await web3Modal.connect();
@@ -51,40 +54,70 @@ export default function Home() {
     resetMessages();
   };
 
-  useEffect(() => {
-    fetchStatsData();
-    if (web3Modal.cachedProvider) {
-      connectWallet();
+  // Get faucet data from Infura Provider
+  const getFaucetBalance = async () => {
+    try {
+      setStatsLoading(true);
+      const provider = new ethers.providers.InfuraProvider("rinkeby", infuraId);
+      const faucetContract = new ethers.Contract(
+        FAUCET_CONTRACT_ADDRESS,
+        abi,
+        provider
+      );
+      setFaucetBalance(
+        ethers.utils.formatUnits(await faucetContract.getTotalFaucetFunds(), 0)
+      );
+      setStatsLoading(false);
+    } catch (error) {
+      console.log(error);
     }
-  }, []);
-
-  useEffect(() => {
-    if (window.ethereum) {
-      window.ethereum.on("chainChanged", () => {
-        window.location.reload();
-      });
-      window.ethereum.on("accountsChanged", () => {
-        window.location.reload();
-      });
-    }
-  });
-
-  let web3Modal;
-  if (typeof window !== "undefined") {
-    web3Modal = new Web3Modal({
-      network: "rinkeby",
-      cacheProvider: true,
-      providerOptions,
-    });
-  }
-
-  const lookupEnsAddress = async (walletAddress) => {
-    const provider = await web3Modal.connect();
-    const web3Provider = new ethers.providers.Web3Provider(provider);
-    const checkForEnsDomain = await web3Provider.lookupAddress(walletAddress);
-    return checkForEnsDomain;
   };
 
+  const getTotalDonators = async () => {
+    try {
+      setStatsLoading(true);
+      const provider = new ethers.providers.InfuraProvider("rinkeby", infuraId);
+      const faucetContract = new ethers.Contract(
+        FAUCET_CONTRACT_ADDRESS,
+        abi,
+        provider
+      );
+      setDonators(
+        ethers.utils.formatUnits(await faucetContract.getTotalDonators(), 0)
+      );
+      setStatsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getTotalPayouts = async () => {
+    try {
+      setStatsLoading(true);
+      const provider = new ethers.providers.InfuraProvider("rinkeby", infuraId);
+      const faucetContract = new ethers.Contract(
+        FAUCET_CONTRACT_ADDRESS,
+        abi,
+        provider
+      );
+      setRequests(
+        ethers.utils.formatUnits(await faucetContract.getTotalPayouts(), 0)
+      );
+      setStatsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchStatsData = async () => {
+    await getFaucetBalance();
+    await getTotalDonators();
+    await getTotalPayouts();
+  };
+
+  // END faucet Data
+
+  // User Data
   const fetchUserBalance = async () => {
     setLoading(true);
     const provider = await web3Modal.connect();
@@ -95,7 +128,55 @@ export default function Home() {
     setUserBalance(balanceInEth);
     setLoading(false);
   };
+  const fetchUserData = async () => {
+    await fetchUserBalance();
+    await getDonatorData();
+  };
 
+  const getDonatorData = async () => {
+    try {
+      setLoading(true);
+      const provider = await web3Modal.connect();
+      const web3Provider = new ethers.providers.Web3Provider(provider);
+      const faucetContract = new ethers.Contract(
+        FAUCET_CONTRACT_ADDRESS,
+        abi,
+        web3Provider
+      );
+      const dArr = await faucetContract.getDonatorAddresses();
+      Promise.all(dArr.map((item) => getIndividualDonator(item))).then(
+        (data) => {
+          setDonatorList(data);
+        }
+      );
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getIndividualDonator = async (id) => {
+    const provider = await web3Modal.connect();
+    const web3Provider = new ethers.providers.Web3Provider(provider);
+    const faucetContract = new ethers.Contract(
+      FAUCET_CONTRACT_ADDRESS,
+      abi,
+      web3Provider
+    );
+    const data = await faucetContract.getIndividualDonator(id);
+    return data;
+  };
+
+  const lookupEnsAddress = async (walletAddress) => {
+    const provider = await web3Modal.connect();
+    const web3Provider = new ethers.providers.Web3Provider(provider);
+    const checkForEnsDomain = await web3Provider.lookupAddress(walletAddress);
+    return checkForEnsDomain;
+  };
+  // End user data
+
+  // Transactions
   const donate = async (amount) => {
     try {
       setLoading(true);
@@ -154,115 +235,40 @@ export default function Home() {
       setAllowedToWithdraw(false);
     }
   };
-
-  const getFaucetBalance = async () => {
-    try {
-      setStatsLoading(true);
-      const provider = await web3Modal.connect();
-      const web3Provider = new ethers.providers.Web3Provider(provider);
-      const faucetContract = new ethers.Contract(
-        FAUCET_CONTRACT_ADDRESS,
-        abi,
-        web3Provider
-      );
-      setFaucetBalance(
-        ethers.utils.formatUnits(await faucetContract.getTotalFaucetFunds(), 0)
-      );
-      setStatsLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getTotalDonators = async () => {
-    try {
-      setStatsLoading(true);
-      const provider = await web3Modal.connect();
-      const web3Provider = new ethers.providers.Web3Provider(provider);
-      const faucetContract = new ethers.Contract(
-        FAUCET_CONTRACT_ADDRESS,
-        abi,
-        web3Provider
-      );
-      setDonators(
-        ethers.utils.formatUnits(await faucetContract.getTotalDonators(), 0)
-      );
-      setStatsLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getDonatorData = async () => {
-    try {
-      setLoading(true);
-      const provider = await web3Modal.connect();
-      const web3Provider = new ethers.providers.Web3Provider(provider);
-      const faucetContract = new ethers.Contract(
-        FAUCET_CONTRACT_ADDRESS,
-        abi,
-        web3Provider
-      );
-      const dArr = await faucetContract.getDonatorAddresses();
-      Promise.all(dArr.map((item) => getIndividualDonator(item))).then(
-        (data) => {
-          setDonatorList(data);
-        }
-      );
-
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getIndividualDonator = async (id) => {
-    const provider = await web3Modal.connect();
-    const web3Provider = new ethers.providers.Web3Provider(provider);
-    const faucetContract = new ethers.Contract(
-      FAUCET_CONTRACT_ADDRESS,
-      abi,
-      web3Provider
-    );
-    const data = await faucetContract.getIndividualDonator(id);
-    return data;
-  };
-
-  const getTotalPayouts = async () => {
-    try {
-      setStatsLoading(true);
-      const provider = await web3Modal.connect();
-      const web3Provider = new ethers.providers.Web3Provider(provider);
-      const faucetContract = new ethers.Contract(
-        FAUCET_CONTRACT_ADDRESS,
-        abi,
-        web3Provider
-      );
-      setRequests(
-        ethers.utils.formatUnits(await faucetContract.getTotalPayouts(), 0)
-      );
-      setStatsLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchUserData = async () => {
-    await fetchUserBalance();
-    await getDonatorData();
-  };
-
-  const fetchStatsData = async () => {
-    await getFaucetBalance();
-    await getTotalDonators();
-    await getTotalPayouts();
-  };
+  // End transactions
 
   const resetMessages = () => {
     setSuccessMessage("");
     setErrorMessage("");
     setAllowedToWithdraw(true);
   };
+
+  useEffect(() => {
+    fetchStatsData();
+    if (web3Modal.cachedProvider) {
+      connectWallet();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on("chainChanged", () => {
+        window.location.reload();
+      });
+      window.ethereum.on("accountsChanged", () => {
+        window.location.reload();
+      });
+    }
+  });
+
+  let web3Modal;
+  if (typeof window !== "undefined") {
+    web3Modal = new Web3Modal({
+      network: "rinkeby",
+      cacheProvider: true,
+      providerOptions,
+    });
+  }
 
   const requestDisabled = faucetBalance < 50000000000000000;
 
@@ -380,14 +386,14 @@ export default function Home() {
                 You can only request funds once every 24 hours, come back later!
               </p>
             )}
-            <Stats
-              loading={statsLoading}
-              balance={faucetBalance}
-              donators={donators}
-              requests={requests}
-            />
           </div>
         )}
+        <Stats
+          loading={statsLoading}
+          balance={faucetBalance}
+          donators={donators}
+          requests={requests}
+        />
       </div>
       {donatorList.length > 0 && <DonatorStats donatorList={donatorList} />}
     </Layout>
